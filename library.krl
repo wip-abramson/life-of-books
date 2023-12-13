@@ -23,9 +23,9 @@ ruleset com.futurewip.library {
 <button type="submit">Mint Book</button>
 </form>
 <ul>
-#{ent:bookEcis.map(function(eci) {
+#{ent:bookEcis.map(function(bookEci) {
 <<
-<li>#{wrangler:picoQuery(eci,book_repo_rid,"book",{})}</li>
+<li>#{wrangler:picoQuery(bookEci,book_repo_rid,"book",{})}</li>
 >>
 }).join("")
 }
@@ -36,7 +36,7 @@ ruleset com.futurewip.library {
   }
 
   rule initialize {
-    select when com_futurewip_book factory_reset
+    select when com_futurewip_library factory_reset
     where ent:bookEcis.isnull()
     fired {
       ent:bookEcis:= []
