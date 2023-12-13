@@ -41,7 +41,6 @@ ruleset com.futurewip.library {
     fired {
       ent:bookEcis:= []
     }
-    
   }
   rule addBook {
     select when com_futurewip_library book_added
@@ -53,6 +52,16 @@ ruleset com.futurewip.library {
         event:attrs.put("name",repo_name(title))
     }
   }
+
+    rule reactToBookPicoInitialized {
+      select when wrangler event "book_initialized"
+      pre {
+        child_eci = event:attr("eci")
+      }
+      fired {
+        ent:bookEcis:= ent:bookEcis.append(child_eci)
+      }
+    }
 	
   rule reactToChildCreation {
     select when wrangler:new_child_created
@@ -66,7 +75,6 @@ ruleset com.futurewip.library {
         "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/book.krl","rid":book_repo_rid}
       })
     fired {
-      ent:bookEcis:= ent:bookEcis.append(child_eci)
 
       raise ruleset event "repo_installed" // terminal event
     }
