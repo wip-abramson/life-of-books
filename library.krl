@@ -25,7 +25,7 @@ ruleset com.futurewip.library {
 <ul>
 #{ent:bookEcis.map(function(eci) {
 <<
-<li>#{wrangler:picoQuery(eci,book_repo_rid,"book",{});bookPico}</li>
+<li>#{wrangler:picoQuery(eci,book_repo_rid,"book",{})}</li>
 >>
 }).join("")
 }
