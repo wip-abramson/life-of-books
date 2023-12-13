@@ -82,7 +82,7 @@ ruleset com.futurewip.library {
   rule redirectBack {
      select when com_futurewip_library book_added
      pre {
-       home_page = app:query_url(meta:rid,"book.html")
+       home_page = app:query_url(meta:rid,"library.html")
      }
      send_directive("_redirect",{"url":home_page})
   }
