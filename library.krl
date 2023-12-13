@@ -39,7 +39,7 @@ ruleset com.futurewip.library {
     select when com_futurewip_book factory_reset
     where ent:bookEcis.isnull()
     fired {
-      ent:books:= [{"title": "1491"}]
+      ent:bookEcis:= []
     }
     
   }
@@ -60,13 +60,14 @@ ruleset com.futurewip.library {
       child_eci = event:attr("eci")
     }
     if child_eci then
-      ent:bookEcis:= ent:bookEcis.append(child_eci)
 
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/book.krl","rid":book_repo_rid}
       })
     fired {
+      ent:bookEcis:= ent:bookEcis.append(child_eci)
+
       raise ruleset event "repo_installed" // terminal event
     }
   }
