@@ -25,7 +25,7 @@ ruleset com.futurewip.library {
 <ul>
 #{ent:bookEcis.map(function(bookEci) {
 <<
-<li>#{wrangler:picoQuery(bookEci,book_repo_rid,"book",{})}</li>
+<li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
 >>
 }).join("")
 }
@@ -49,19 +49,9 @@ ruleset com.futurewip.library {
 
     fired {
       raise wrangler event "new_child_request" attributes
-        event:attrs.put("name",repo_name(title))
+        event:attrs.put("name",repo_name(title)).put("title", title)
     }
   }
-
-    rule reactToBookPicoInitialized {
-      select when wrangler event "book_initialized"
-      pre {
-        child_eci = event:attr("eci")
-      }
-      fired {
-        ent:bookEcis:= ent:bookEcis.append(child_eci)
-      }
-    }
 	
   rule reactToChildCreation {
     select when wrangler:new_child_created
@@ -75,7 +65,7 @@ ruleset com.futurewip.library {
         "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid}
       })
     fired {
-
+      ent:bookEcis:= ent:bookEcis.append(child_eci)
       raise ruleset event "repo_installed" // terminal event
     }
   }
