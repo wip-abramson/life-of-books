@@ -57,12 +57,13 @@ ruleset com.futurewip.library {
     select when wrangler:new_child_created
     pre {
       child_eci = event:attr("eci")
+      title = event:attr("title")
     }
     if child_eci then
 
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
-        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid}
+        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid, "title": title}
       })
     fired {
       ent:bookEcis:= ent:bookEcis.append(child_eci)

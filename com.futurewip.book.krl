@@ -14,20 +14,14 @@ ruleset com.futurewip.book {
   }
 
 
-  rule pico_created {
-    select when wrangler:pico_created
-
+	rule ruleset_installed {
+    select when wrangler:ruleset_installed
     pre {
       title = event:attrs.get("title")
     }
     fired {
       ent:title:= title
     }
-  }
-
-	rule ruleset_installed {
-    select when wrangler:ruleset_installed
-
   }
 
 
