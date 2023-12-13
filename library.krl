@@ -1,29 +1,30 @@
-ruleset com.futurewip.book {
+ruleset com.futurewip.library {
   meta {
-    name "Books"
+    name "Living Library"
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
-    shares book
+    shares library
   }
   global {
-    repo_rid = "com.futurewip.books"
+    repo_rid = "com.futurewip.library"
     repo_name = function(title){
       netid = wrangler:name()
       netid+"/library/"+title
     }
-    book = function(_headers){
+    library = function(_headers){
       app:html_page("manage Books", "",
 <<
-<h1>Manage Books</h1>
+<h1>Living Library</h1>
+<h2>Manage Books</h2>
 <form action="#{app:event_url(meta:rid,"book_added")}">
 <label>Book Title</label>
 <input name="title" autofocus/>
-<button type="submit">Add Book</button>
+<button type="submit">Mint Book</button>
 </form>
 <ul>
-#{wrangler:children().map(function(child) {
+#{ent:bookEcis.map(function(eci) {
 <<
-<li>#{child.get("name")}</li>
+<li>#{wrangler:picoQuery(eci,"my.ruleset.id","myFunction",{}.put(args));bookPico}</li>
 >>
 }).join("")
 }
@@ -35,7 +36,7 @@ ruleset com.futurewip.book {
 
   rule initialize {
     select when com_futurewip_book factory_reset
-    where ent:books.isnull()
+    where ent:bookEcis.isnull()
     fired {
       ent:books:= [{"title": "1491"}]
     }
@@ -43,11 +44,10 @@ ruleset com.futurewip.book {
   }
   rule addBook {
     select when com_futurewip_book book_added
-      title re#(.+)#
-      setting(title)
+    title re#(.+)#
+    setting(title)
 
     fired {
-      ent:books:= ent:books.append({"title":title})
       raise wrangler event "new_child_request" attributes
         event:attrs.put("name",repo_name(title))
     }
@@ -59,6 +59,8 @@ ruleset com.futurewip.book {
       child_eci = event:attr("eci")
     }
     if child_eci then
+      ent:bookEcis:= ent:bookEcis.append(child_eci)
+
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": meta:rulesetURI,"rid":repo_rid}
