@@ -72,7 +72,7 @@ ruleset com.futurewip.library {
 
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
-        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/book.krl","rid":book_repo_rid}
+        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid}
       })
     fired {
 
