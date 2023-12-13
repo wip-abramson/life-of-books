@@ -7,6 +7,7 @@ ruleset com.futurewip.library {
   }
   global {
     repo_rid = "com.futurewip.library"
+    book_repo_rid = "com.futurewip.book"
     repo_name = function(title){
       netid = wrangler:name()
       netid+"/library/"+title
@@ -24,7 +25,7 @@ ruleset com.futurewip.library {
 <ul>
 #{ent:bookEcis.map(function(eci) {
 <<
-<li>#{wrangler:picoQuery(eci,"my.ruleset.id","myFunction",{}.put(args));bookPico}</li>
+<li>#{wrangler:picoQuery(eci,book_repo_rid,"book",{});bookPico}</li>
 >>
 }).join("")
 }
@@ -43,7 +44,7 @@ ruleset com.futurewip.library {
     
   }
   rule addBook {
-    select when com_futurewip_book book_added
+    select when com_futurewip_library book_added
     title re#(.+)#
     setting(title)
 
@@ -63,14 +64,14 @@ ruleset com.futurewip.library {
 
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
-        "attrs":{"absoluteURL": meta:rulesetURI,"rid":repo_rid}
+        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/book.krl","rid":book_repo_rid}
       })
     fired {
       raise ruleset event "repo_installed" // terminal event
     }
   }
   rule redirectBack {
-     select when com_futurewip_book book_added
+     select when com_futurewip_library book_added
      pre {
        home_page = app:query_url(meta:rid,"book.html")
      }

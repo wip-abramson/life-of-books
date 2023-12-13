@@ -9,7 +9,7 @@ ruleset com.futurewip.book {
 
 
     book = function() {
-
+      "Test BOOK"
     }
   }
 
