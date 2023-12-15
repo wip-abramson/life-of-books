@@ -52,6 +52,21 @@ ruleset com.futurewip.library {
         event:attrs.put("name",repo_name(title)).put("title", title)
     }
   }
+
+  rule handleChildDeletion {
+    select when wrangler:child_deletion_request
+
+    pre {
+      bookToDelete = event:attr("eci)
+      bookIndex = ent:bookEcis.index(bookToDelete)
+    }
+
+    fired {
+      if bookIndex then
+        ent:bookEcis = ent:bookEcis.splice(bookIndex, 1)
+
+    }
+  }
 	
   rule reactToChildCreation {
     select when wrangler:new_child_created
