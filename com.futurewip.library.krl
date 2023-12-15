@@ -71,8 +71,8 @@ ruleset com.futurewip.library {
   rule reactToChildCreation {
     select when wrangler:new_child_created
     pre {
-      child_eci = event:attrs("eci")
-      title = event:attrs("title")
+      child_eci = event:attrs.get("eci")
+      title = event:attrs.get("title")
     }
     if child_eci then
 
