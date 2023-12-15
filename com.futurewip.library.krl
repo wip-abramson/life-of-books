@@ -42,6 +42,7 @@ ruleset com.futurewip.library {
       ent:bookEcis:= []
     }
   }
+  
   rule addBook {
     select when com_futurewip_library book_added
     title re#(.+)#
@@ -63,7 +64,7 @@ ruleset com.futurewip.library {
 
     fired {
       if bookIndex then
-        ent:bookEcis = ent:bookEcis.splice(bookIndex, 1)
+        ent:bookEcis := ent:bookEcis.splice(bookIndex, 1)
 
     }
   }
@@ -71,8 +72,8 @@ ruleset com.futurewip.library {
   rule reactToChildCreation {
     select when wrangler:new_child_created
     pre {
-      child_eci = event:attrs("eci")
-      title = event:attrs("title")
+      child_eci = event:attr("eci")
+      title = event:attr("title")
     }
     if child_eci then
 
@@ -85,7 +86,7 @@ ruleset com.futurewip.library {
       raise ruleset event "repo_installed" // terminal event
     }
   }
-  
+
   rule redirectBack {
      select when com_futurewip_library book_added
      pre {
