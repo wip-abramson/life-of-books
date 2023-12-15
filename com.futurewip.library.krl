@@ -57,7 +57,7 @@ ruleset com.futurewip.library {
     select when wrangler:child_deletion_request
 
     pre {
-      bookToDelete = event:attrs("eci)
+      bookToDelete = event:attr("eci)
       bookIndex = ent:bookEcis.index(bookToDelete)
     }
 
@@ -71,8 +71,8 @@ ruleset com.futurewip.library {
   rule reactToChildCreation {
     select when wrangler:new_child_created
     pre {
-      child_eci = event:attrs.get("eci")
-      title = event:attrs.get("title")
+      child_eci = event:attrs("eci")
+      title = event:attrs("title")
     }
     if child_eci then
 
@@ -85,6 +85,7 @@ ruleset com.futurewip.library {
       raise ruleset event "repo_installed" // terminal event
     }
   }
+  
   rule redirectBack {
      select when com_futurewip_library book_added
      pre {
