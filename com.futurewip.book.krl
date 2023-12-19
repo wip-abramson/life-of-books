@@ -42,7 +42,7 @@ ruleset com.futurewip.book {
     pre {
       title = event:attrs.get("title")
     }
-    if !title then noop()
+    if not title then noop()
     fired {
       ent:title:= title
     }

@@ -58,7 +58,7 @@ ruleset com.futurewip.library {
     select when wrangler:child_deletion_request
 
     pre {
-      bookToDelete = event:attr("eci)
+      bookToDelete = event:attr("eci")
       bookIndex = ent:bookEcis.index(bookToDelete)
     }
     if bookIndex >= 0 then noop()
