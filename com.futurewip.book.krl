@@ -8,7 +8,7 @@ ruleset com.futurewip.book {
 
 
     book = function() {
-      <<<div><h2>#{ent:title}</h2><button onclick="#{event_url(meta:rid,"remove_book")}">Remove</button></div>
+      <<<div><h2>#{ent:title}</h2><a href="#{event_url(meta:rid,"remove_book")}">Remove</button></div>
       >>
     }
 
@@ -38,7 +38,7 @@ ruleset com.futurewip.book {
     pre {
       title = event:attrs.get("title")
     }
-    if title then noop()
+    // if title then noop()
     fired {
       ent:title:= title
     }
