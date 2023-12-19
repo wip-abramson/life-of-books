@@ -61,10 +61,10 @@ ruleset com.futurewip.library {
       bookToDelete = event:attr("eci)
       bookIndex = ent:bookEcis.index(bookToDelete)
     }
+    if bookIndex >= 0 then noop()
 
     fired {
-      if bookIndex then
-        ent:bookEcis := ent:bookEcis.splice(bookIndex, 1)
+      ent:bookEcis = ent:bookEcis.splice(bookIndex, 1)
 
     }
   }
@@ -72,8 +72,8 @@ ruleset com.futurewip.library {
   rule reactToChildCreation {
     select when wrangler:new_child_created
     pre {
-      child_eci = event:attr("eci")
-      title = event:attr("title")
+      child_eci = event:attrs("eci")
+      title = event:attrs("title")
     }
     if child_eci then
 
