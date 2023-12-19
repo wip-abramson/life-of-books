@@ -8,11 +8,7 @@ ruleset com.futurewip.book {
 
 
     book = function() {
-      <<
-      <div>
-      <h2>#{ent:title}</h2> 
-      <button onclick="#{event_url(meta:rid,"book_added")}">Remove</button>
-      </div>
+      <<<div><h2>#{ent:title}</h2><button onclick="#{event_url(meta:rid,"book_added")}">Remove</button></div>
       >>
     }
 
