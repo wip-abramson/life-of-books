@@ -64,7 +64,7 @@ ruleset com.futurewip.library {
     if bookIndex >= 0 then noop()
 
     fired {
-      ent:bookEcis = ent:bookEcis.splice(bookIndex, 1)
+      ent:bookEcis := ent:bookEcis.splice(bookIndex, 1)
 
     }
   }
