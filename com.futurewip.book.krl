@@ -8,12 +8,12 @@ ruleset com.futurewip.book {
 
 
     book = function() {
-      <<<div><h2>#{ent:title}</h2><button onclick="#{event_url(meta:rid,"book_added")}">Remove</button></div>
+      <<<div><h2>#{ent:title}</h2><button onclick="#{event_url(meta:rid,"remove_book")}">Remove</button></div>
       >>
     }
 
     event_url = function(event_type,event_id){
-          eci = wrangler:channels(["library","book"]).reverse().head().get("id")
+      eci = wrangler:channels(["library","book"]).reverse().head().get("id")
       eid = event_id || "none"
       event_domain = "com_futurewip_book"
       <<#{meta:host}/sky/event/#{eci}/#{eid}/#{event_domain}/#{event_type}>>
@@ -38,7 +38,7 @@ ruleset com.futurewip.book {
     pre {
       title = event:attrs.get("title")
     }
-    if not title then noop()
+    if title then noop()
     fired {
       ent:title:= title
     }
