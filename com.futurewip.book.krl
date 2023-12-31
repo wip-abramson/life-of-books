@@ -9,14 +9,14 @@ ruleset com.futurewip.book {
 
     book = function() {
       <<<div><h2>#{ent:title}</h2>
-      <form method="POST" action="#{event_url(meta:rid,"remove_book")}">
+      <form method="POST" action="#{event_url(meta:rid, "tags", null, "remove_book")}">
       <button type="submit">Remove</button></div>
       </form>
       >>
     }
 
-    event_url = function(event_type,event_id){
-      eci = wrangler:channels(["library","book"]).reverse().head().get("id")
+    event_url = function(rid, tags, event_type,event_id){
+      eci = wrangler:channels([rid,"tags"]).reverse().head().get("id")
       eid = event_id || "none"
       event_domain = "com_futurewip_book"
       <<#{meta:host}/sky/event/#{eci}/#{eid}/#{event_domain}/#{event_type}>>
