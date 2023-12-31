@@ -31,6 +31,7 @@ ruleset com.futurewip.book {
     select when com_futurewip_book remove_book
 
     fired {
+      ent:title := "Book Deleted!"
       raise wrangler event "ready_for_deletion"
     }
   }
@@ -39,9 +40,10 @@ ruleset com.futurewip.book {
 	rule ruleset_installed {
     select when wrangler:ruleset_installed
     pre {
-      title = event:attrs.get("title")
+      title = event:attr("title")
     }
-    if not title then noop()
+    // if not title then 
+    //   noop()
     fired {
       ent:title:= title
     }
