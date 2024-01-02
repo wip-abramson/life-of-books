@@ -52,11 +52,10 @@ ruleset com.futurewip.library {
       raise wrangler event "new_child_request" attributes
         event:attrs.put("name",repo_name(title)).put("title", title)
     }
-  }
+  } 
 
   rule handleChildDeletion {
-    select when wrangler:child_deletion_request
-
+    select when wrangler:child_deleted
     pre {
       bookToDelete = event:attr("eci")
       bookIndex = ent:bookEcis.index(bookToDelete)
