@@ -6,6 +6,7 @@ ruleset com.futurewip.library {
     shares library
   }
   global {
+    event_domain = "com_futurewip_library"
     repo_rid = "com.futurewip.library"
     book_repo_rid = "com.futurewip.book"
     repo_name = function(title){
@@ -64,6 +65,7 @@ ruleset com.futurewip.library {
 
     fired {
       ent:bookEcis := ent:bookEcis.splice(bookIndex, 1)
+      raise com_futurewip_library event "book_deleted"
 
     }
   }
@@ -88,6 +90,7 @@ ruleset com.futurewip.library {
 
   rule redirectBack {
      select when com_futurewip_library book_added
+            or com_futurewip_library book_deleted
      pre {
        home_page = app:query_url(meta:rid,"library.html")
      }
