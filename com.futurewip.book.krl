@@ -31,12 +31,9 @@ ruleset com.futurewip.book {
     select when com_futurewip_book remove_book
 
     pre {
-      eci = wrangler:parent_eci()
-      home_page = wrangler:picoQuery(wrangler:parent_eci(), null, "home_page", {})
-
+      referrer = event:attr("_headers").get("referer") // sic
     }
-
-    send_directive("_redirect",{"url":home_page})
+    if referrer then send_directive("_redirect",{"url":referrer})
 
     fired {
       raise wrangler event "ready_for_deletion"
