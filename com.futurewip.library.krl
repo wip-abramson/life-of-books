@@ -16,15 +16,23 @@ ruleset com.futurewip.library {
     home_page = function() {
       app:query_url(meta:rid,"library.html")
     }
+    book_minter = function(_headers) {
+      app:html_page("mint book", "",
+        <<
+        <h1>Mint Book</h1>
+        #{wrangler:picoQuery(eci_to_mint, book_repo_rid, "mint_page", {})}
+        >>
+      , _headers)
+    }
     library = function(_headers){
       app:html_page("manage Books", "",
 <<
 <h1>Living Library</h1>
 <h2>Manage Books</h2>
-<form action="#{app:event_url(meta:rid,"book_added")}">
-<label>Book Title</label>
+<form action='#{app:event_url(meta:rid,"book_added")}'>
+<label>Book Title</label>Library
 <input name="title" autofocus/>
-<button type="submit">Mint Book</button>
+<button type="submit">Add Book</button>
 </form>
 <ul>
 #{ent:bookEcis.map(function(bookEci) {

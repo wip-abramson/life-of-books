@@ -10,8 +10,18 @@ ruleset com.futurewip.book {
     event_domain = "com_futurewip_book"
     book = function() {
       <<<div><h2>#{ent:title}</h2>
+      <div>
+      <form method="POST" action='#{event_url("generate_from_esbn")}'>
+      <label>ESBN</label>
+      <input type="text" autofocus/>
+      <button type="submit">Generate</button>
+      </form>
+      </div>
       <form method="POST" action='#{event_url("remove_book")}'>
       <button type="submit">Remove</button></div>
+      </form>
+      <form method="POST" action='#{event_url("mint_book")}'>
+      <button type="submit">Mint</button></div>
       </form>
       >>
     }
@@ -38,6 +48,14 @@ ruleset com.futurewip.book {
     fired {
       raise wrangler event "ready_for_deletion"
     }
+  }
+
+  rule generate_from_esbn {
+    select when com_futurewip_book generate_from_esbn
+  }
+
+  rule mint_book {
+    select when com_futurewip_book mint_book
   }
 
 
