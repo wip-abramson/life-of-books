@@ -30,8 +30,15 @@ ruleset com.futurewip.book {
   rule remove_book {
     select when com_futurewip_book remove_book
 
+    pre {
+      eci = wrangler:parent_eci()
+      home_page = wrangler:picoQuery(wrangler:parent_eci(), null, "home_page", {})
+
+    }
+
+    send_directive("_redirect",{"url":home_page})
+
     fired {
-      ent:title := "Book Deleted!"
       raise wrangler event "ready_for_deletion"
     }
   }
