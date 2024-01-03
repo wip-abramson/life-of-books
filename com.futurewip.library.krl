@@ -16,33 +16,42 @@ ruleset com.futurewip.library {
     home_page = function() {
       app:query_url(meta:rid,"library.html")
     }
-    book_minter = function(_headers, eci_to_mint) {
-      app:html_page("mint book", "",
+    book_minter = function() {
         <<
         <h1>Mint Book</h1>
-        #{wrangler:picoQuery(eci_to_mint, book_repo_rid, "mint_page", {})}
+        #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
         >>
-      , _headers)
     }
+    // app_html = function {
+    //   if ent:eci_to_mint {
+
+    //   }
+    // }
+    library_list = function() {
+      <<
+      <h2>Manage Books</h2>
+      <form action='#{app:event_url(meta:rid,"book_added")}'>
+      <label>Book Title</label>Library
+      <input name="title" autofocus/>
+      <button type="submit">Add Book</button>
+      </form>
+      <ul>
+      #{ent:bookEcis.map(function(bookEci) {
+      <<
+      <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
+      >>
+      }).join("")
+      }
+      </ul>
+      >>
+    }
+
     library = function(_headers){
       app:html_page("manage Books", "",
-<<
-<h1>Living Library</h1>
-<h2>Manage Books</h2>
-<form action='#{app:event_url(meta:rid,"book_added")}'>
-<label>Book Title</label>Library
-<input name="title" autofocus/>
-<button type="submit">Add Book</button>
-</form>
-<ul>
-#{ent:bookEcis.map(function(bookEci) {
-<<
-<li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
->>
-}).join("")
-}
-</ul>
->>, _headers)
+      <<
+      <h1>Living Library</h1>
+      <div>#{ent:eci_to_mint => book_minter() | library_list()}</div>
+      >>, _headers)
     }
 
   }
@@ -94,7 +103,7 @@ ruleset com.futurewip.library {
         "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid, "title": title}
       })
     fired {
-      ent:bookEcis:= ent:bookEcis.append(child_eci)
+      ent:eci_to_mint:= child_eci
       raise ruleset event "repo_installed" // terminal event
     }
   }
