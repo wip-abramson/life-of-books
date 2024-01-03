@@ -16,7 +16,7 @@ ruleset com.futurewip.library {
     home_page = function() {
       app:query_url(meta:rid,"library.html")
     }
-    book_minter = function(_headers) {
+    book_minter = function(_headers, eci_to_mint) {
       app:html_page("mint book", "",
         <<
         <h1>Mint Book</h1>
