@@ -65,6 +65,7 @@ ruleset com.futurewip.book {
       title = event:attr("title")
     }
     if title then noop()
+
     fired {
       ent:title:= title
     }

@@ -16,19 +16,15 @@ ruleset com.futurewip.library {
     home_page = function() {
       app:query_url(meta:rid,"library.html")
     }
-    book_minter = function() {
-        <<
-        <h1>Mint Book</h1>
-        #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
-        >>
+    minter_page = function() {
+      app:query_url(meta:rid, "minter.html")
     }
-    // app_html = function {
-    //   if ent:eci_to_mint {
 
-    //   }
-    // }
-    library_list = function() {
+
+    library = function(_headers){
+      app:html_page("manage Books", "",
       <<
+      <h1>Living Library</h1>
       <h2>Manage Books</h2>
       <form action='#{app:event_url(meta:rid,"book_added")}'>
       <label>Book Title</label>Library
@@ -43,15 +39,16 @@ ruleset com.futurewip.library {
       }).join("")
       }
       </ul>
-      >>
+      >>, _headers)
     }
 
-    library = function(_headers){
-      app:html_page("manage Books", "",
+    minter = function(_headers) {
+      app:html_page("mint book", "",
       <<
-      <h1>Living Library</h1>
-      <div>#{ent:eci_to_mint => book_minter() | library_list()}</div>
-      >>, _headers)
+      <h1>Mint Book</h1>
+      #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
+      >>
+      )
     }
 
   }
@@ -95,22 +92,32 @@ ruleset com.futurewip.library {
     pre {
       child_eci = event:attr("eci")
       title = event:attr("title")
+      minter_page = minter_page()
     }
-    if child_eci then
-
+    if child_eci then 
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid, "title": title}
       })
+
     fired {
       ent:eci_to_mint:= child_eci
+      raise com_futurewip_library event "book_deleted"
       raise ruleset event "repo_installed" // terminal event
     }
   }
 
+  rule navigateToMinter {
+    select when com_futurewip_library book_added
+
+    pre {
+      minter_page = minter_page()
+    }
+    send_directive("_redirect",{"url":minter_page})
+  }
+
   rule redirectBack {
-     select when com_futurewip_library book_added
-            or com_futurewip_library book_deleted
+     select when com_futurewip_library book_deleted
      pre {
        home_page = home_page()
      }
