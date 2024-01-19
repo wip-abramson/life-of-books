@@ -3,7 +3,7 @@ ruleset com.futurewip.library {
     name "Living Library"
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
-    shares library, home_page
+    shares library, home_page, minter
   }
   global {
     event_domain = "com_futurewip_library"
@@ -47,7 +47,7 @@ ruleset com.futurewip.library {
       <<
       <h1>Mint Book</h1>
       #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
-      >>
+      >>, _headers
       )
     }
 
