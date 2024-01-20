@@ -9,20 +9,12 @@ ruleset com.futurewip.book {
     channel_tags = ["library","book"]
     event_domain = "com_futurewip_book"
     book = function() {
-      <<<div><h2>#{ent:title}</h2>
-      <div>
-      <form method="POST" action='#{event_url("generate_from_esbn")}'>
-      <label>ESBN</label>
-      <input type="text" autofocus/>
-      <button type="submit">Generate</button>
+      <<<div>
+      <h2>#{ent:title}</h2>
+      <form method="POST" action='#{event_url("remove_book")}'>
+      <button type="submit">Remove</button>
       </form>
       </div>
-      <form method="POST" action='#{event_url("remove_book")}'>
-      <button type="submit">Remove</button></div>
-      </form>
-      <form method="POST" action='#{event_url("mint_book")}'>
-      <button type="submit">Mint</button></div>
-      </form>
       >>   
     }
 
@@ -30,12 +22,17 @@ ruleset com.futurewip.book {
       <<<div>
       <h1>Mint Book</h2>
       <form method="POST" action='#{event_url("mint_book")}'>
-      <input name="isbn" autofocus/>
-      <input name="title" autofocus/>
-      <form method="POST" action='#{event_url("cancel_mint")}'>
-      <button type="submit">Remove</button></div>
+      <form method="POST" action='#{event_url("generate_from_isbn")}'>
+      <label>ISBN</label>
+      <input type="text" autofocus/>
+      <button type="submit">Generate</button>
       </form>
+
+      <input name="title" autofocus/>
       <button type="submit">Mint</button></div>
+      </form>
+      <form method="POST" action='#{event_url("cancel_mint")}'>
+      <button type="submit">Cancel</button></div>
       </form>
       </div>
       >>
@@ -56,10 +53,12 @@ ruleset com.futurewip.book {
     select when com_futurewip_book cancel_mint
 
     // TODO: need to redirect to HOME
-    // pre {
-    //   referrer = event:attr("_headers").get("referer") // sic
-    // }
-    // if referrer then send_directive("_redirect",{"url":referrer})
+    pre {
+      
+      parent_eci = wrangler:parent_eci() // sic
+    }
+    event:send({"eci":parent_eci,
+    "domain":"com.futurewip.library","type":"cancel_mint"  })
 
     fired {
       raise wrangler event "ready_for_deletion"
@@ -79,8 +78,8 @@ ruleset com.futurewip.book {
     }
   }
 
-  rule generate_from_esbn {
-    select when com_futurewip_book generate_from_esbn
+  rule generate_from_isbn {
+    select when com_futurewip_book generate_from_isbn
   }
 
   
@@ -90,7 +89,13 @@ ruleset com.futurewip.book {
     setting(title)
     // isbn re#(.+)#
     // setting(isbn)
-    if title then noop()
+    pre {
+      parent_eci = wrangler:parent_eci()
+    }
+    if title then 
+    event:send({"eci":parent_eci,
+    "domain":"com.futurewip.library","type":"book_minted"  })
+
 
     fired {
       ent:title := title

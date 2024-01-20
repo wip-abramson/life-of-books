@@ -84,17 +84,12 @@ ruleset com.futurewip.library {
   }
 
   rule handleMintCancelled {
-    select when wrangler:child_deleted
-    pre {
-      bookToDelete = event:attr("eci")
-      eciToMint = ent:eci_to_mint
-    }
-    if bookToDelete == eciToMint then noop()
+    select when com_futurewip_library cancel_mint
+    
 
     fired {
       ent:eci_to_mint := null
-      // raise com_futurewip_library event "book_deleted"
-
+      raise com_futurewip_library event "navigate_home"
     }
   }
 	
@@ -119,8 +114,7 @@ ruleset com.futurewip.library {
   rule bookMinted {
     select when com_futurewip_library book_minted
     pre {
-      book_eci = event:attr("eci")
-
+      book_eci = ent:eci_to_mint
     }
     fired {
       ent:bookEcis := ent:bookEcis.append(book_eci)
