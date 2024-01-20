@@ -21,15 +21,20 @@ ruleset com.futurewip.book {
     mint_page = function() {
       <<<div>
       <h1>Mint Book</h2>
-      <form method="POST" action='#{event_url("mint_book")}'>
       <form method="POST" action='#{event_url("generate_from_isbn")}'>
+      <div>
       <label>ISBN</label>
       <input type="text" autofocus/>
+      </div>
       <button type="submit">Generate</button>
       </form>
 
+      <form method="POST" action='#{event_url("mint_book")}'>
+      <div>
+      <label>Title</label>
       <input name="title" autofocus/>
       <button type="submit">Mint</button></div>
+      </div>
       </form>
       <form method="POST" action='#{event_url("cancel_mint")}'>
       <button type="submit">Cancel</button></div>
