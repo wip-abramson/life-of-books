@@ -27,10 +27,9 @@ ruleset com.futurewip.library {
       <h1>Living Library</h1>
       <h2>Manage Books</h2>
       <form action='#{app:event_url(meta:rid,"book_added")}'>
-      <label>Book Title</label>Library
-      <input name="title" autofocus/>
       <button type="submit">Add Book</button>
       </form>
+      <h2>Books</h2>
       <ul>
       #{ent:bookEcis.map(function(bookEci) {
       <<
