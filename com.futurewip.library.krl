@@ -93,7 +93,7 @@ ruleset com.futurewip.library {
 
     fired {
       ent:eci_to_mint := null
-      raise com_futurewip_library event "navigate_home"
+      // raise com_futurewip_library event "navigate_home"
     }
   }
 	
@@ -120,7 +120,7 @@ ruleset com.futurewip.library {
       book_eci = ent:eci_to_mint
       home_page = home_page()
     }
-    send_directive("_redirect",{"url":home_page})
+    // send_directive("_redirect",{"url":home_page})
     fired {
       ent:bookEcis := ent:bookEcis.append(book_eci)
       ent:eci_to_mint := null
