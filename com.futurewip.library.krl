@@ -26,13 +26,14 @@ ruleset com.futurewip.library {
       <<
       <h1>Living Library</h1>
       <h2>Manage Books</h2>
-      <form action='#{app:event_url(meta:rid,"book_added")}'>
+      <form action='#{app:event_url(meta:rid,"new_book")}'>
       <button type="submit">Add Book</button>
       </form>
       <h2>Books</h2>
       <ul>
       #{ent:bookEcis.map(function(bookEci) {
       <<
+      <li>#{bookEci}</li>
       <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
       >>
       }).join("")
@@ -59,9 +60,12 @@ ruleset com.futurewip.library {
     }
   }
   
-  rule addBook {
-    select when com_futurewip_library book_added
-
+  rule newBook {
+    select when com_futurewip_library new_book
+    pre {
+      minter_page = minter_page()
+    }
+    send_directive("_redirect",{"url":minter_page})
     fired {
       raise wrangler event "new_child_request" attributes
         event:attrs.put("name",repo_name())
@@ -106,7 +110,6 @@ ruleset com.futurewip.library {
 
     fired {
       ent:eci_to_mint:= child_eci
-      raise com_futurewip_library event "book_deleted"
       raise ruleset event "repo_installed" // terminal event
     }
   }
@@ -119,22 +122,13 @@ ruleset com.futurewip.library {
     fired {
       ent:bookEcis := ent:bookEcis.append(book_eci)
       ent:eci_to_mint := null
-      raise com_futurewip_library event "nagivate_home"
+      raise com_futurewip_library event "navigate_home"
     }
-  }
-
-  rule navigateToMinter {
-    select when com_futurewip_library book_added
-
-    pre {
-      minter_page = minter_page()
-    }
-    send_directive("_redirect",{"url":minter_page})
   }
 
   rule redirectHome {
      select when com_futurewip_library book_deleted or
-      com_futurewip_library nagivate_home
+      com_futurewip_library navigate_home
      pre {
        home_page = home_page()
      }
