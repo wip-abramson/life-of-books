@@ -9,9 +9,9 @@ ruleset com.futurewip.library {
     event_domain = "com_futurewip_library"
     repo_rid = "com.futurewip.library"
     book_repo_rid = "com.futurewip.book"
-    repo_name = function(title){
+    repo_name = function(){
       netid = wrangler:name()
-      netid+"/library/"+title
+      netid+"/library"
     }
     home_page = function() {
       app:query_url(meta:rid,"library.html")
@@ -45,7 +45,7 @@ ruleset com.futurewip.library {
       app:html_page("mint book", "",
       <<
       <h1>Mint Book</h1>
-      #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
+      #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "book", {})}
       >>, _headers
       )
     }
@@ -62,12 +62,10 @@ ruleset com.futurewip.library {
   
   rule addBook {
     select when com_futurewip_library book_added
-    title re#(.+)#
-    setting(title)
 
     fired {
       raise wrangler event "new_child_request" attributes
-        event:attrs.put("name",repo_name(title)).put("title", title)
+        event:attrs.put("name",repo_name())
     }
   } 
 
@@ -90,13 +88,11 @@ ruleset com.futurewip.library {
     select when wrangler:new_child_created
     pre {
       child_eci = event:attr("eci")
-      title = event:attr("title")
-      minter_page = minter_page()
     }
     if child_eci then 
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
-        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid, "title": title}
+        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid,}
       })
 
     fired {
