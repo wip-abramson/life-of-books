@@ -117,7 +117,7 @@ ruleset com.futurewip.library {
   rule bookMinted {
     select when com_futurewip_library book_minted
     pre {
-      book_eci = ent:eci_to_mint
+      book_eci = ent:eci_to_mint.klog("Minted ECI")
       home_page = home_page()
     }
     // send_directive("_redirect",{"url":home_page})
