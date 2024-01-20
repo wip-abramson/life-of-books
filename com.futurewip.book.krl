@@ -62,10 +62,12 @@ ruleset com.futurewip.book {
       
       parent_eci = wrangler:parent_eci() // sic
     }
+    
     event:send({"eci":parent_eci,
     "domain":"com.futurewip.library","type":"cancel_mint"  })
 
     fired {
+      raise com_futurewip_book event "library_home"
       raise wrangler event "ready_for_deletion"
     }
   }
@@ -104,9 +106,18 @@ ruleset com.futurewip.book {
 
     fired {
       ent:title := title
-      // raise book minted
+      raise com_futurewip_book event "library_home"
     }
 
+  }
+
+  rule library_home {
+    select when com_futurewip_book library_home
+    pre {
+      home_url = wrangler:picoQuery(wrangler:parent_eci(),"com.futurewip.library", "home_page", {})
+    }
+    send_directive("_redirect",{"url":home_url})
+    
   }
 
 
