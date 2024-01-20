@@ -118,11 +118,13 @@ ruleset com.futurewip.library {
     select when com_futurewip_library book_minted
     pre {
       book_eci = ent:eci_to_mint
+      home_page = home_page()
     }
+    send_directive("_redirect",{"url":home_page})
     fired {
       ent:bookEcis := ent:bookEcis.append(book_eci)
       ent:eci_to_mint := null
-      raise com_futurewip_library event "navigate_home"
+      // raise com_futurewip_library event "navigate_home"
     }
   }
 
