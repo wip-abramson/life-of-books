@@ -29,8 +29,14 @@ ruleset com.futurewip.book {
     mint_page = function() {
       <<<div>
       <h1>Mint Book</h2>
+      <form method="POST" action='#{event_url("mint_book")}'>
       <input name="isbn" autofocus/>
       <input name="title" autofocus/>
+      <form method="POST" action='#{event_url("cancel_mint")}'>
+      <button type="submit">Remove</button></div>
+      </form>
+      <button type="submit">Mint</button></div>
+      </form>
       </div>
       >>
     }
@@ -43,6 +49,20 @@ ruleset com.futurewip.book {
     query_url = function(query_name){
       eci = wrangler:channels(["library","book"]).reverse().head().get("id")
       <<#{meta:host}/c/#{eci}/query/#{meta:rid}/#{query_name}>>
+    }
+  }
+
+  rule cancel_mint {
+    select when com_futurewip_book cancel_mint
+
+    // TODO: need to redirect to HOME
+    // pre {
+    //   referrer = event:attr("_headers").get("referer") // sic
+    // }
+    // if referrer then send_directive("_redirect",{"url":referrer})
+
+    fired {
+      raise wrangler event "ready_for_deletion"
     }
   }
 
@@ -63,22 +83,34 @@ ruleset com.futurewip.book {
     select when com_futurewip_book generate_from_esbn
   }
 
+  
   rule mint_book {
     select when com_futurewip_book mint_book
-  }
-
-
-	rule ruleset_installed {
-    select when wrangler:ruleset_installed
-    pre {
-      title = event:attr("title")
-    }
+    title re#(.+)#
+    setting(title)
+    // isbn re#(.+)#
+    // setting(isbn)
     if title then noop()
 
     fired {
-      ent:title:= title
+      ent:title := title
+      // raise book minted
     }
+
   }
+
+
+	// rule ruleset_installed {
+  //   select when wrangler:ruleset_installed
+  //   pre {
+  //     title = event:attr("title")
+  //   }
+  //   if title then noop()
+
+  //   fired {
+  //     ent:title:= title
+  //   }
+  // }
   rule initialize {
     select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
     every {

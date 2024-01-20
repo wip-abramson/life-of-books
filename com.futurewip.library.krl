@@ -44,7 +44,6 @@ ruleset com.futurewip.library {
     minter = function(_headers) {
       app:html_page("mint book", "",
       <<
-      <h1>Mint Book</h1>
       #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
       >>, _headers
       )
@@ -83,6 +82,21 @@ ruleset com.futurewip.library {
 
     }
   }
+
+  rule handleMintCancelled {
+    select when wrangler:child_deleted
+    pre {
+      bookToDelete = event:attr("eci")
+      eciToMint = ent:eci_to_mint
+    }
+    if bookToDelete == eciToMint then noop()
+
+    fired {
+      ent:eci_to_mint := null
+      // raise com_futurewip_library event "book_deleted"
+
+    }
+  }
 	
   rule reactToChildCreation {
     select when wrangler:new_child_created
@@ -102,6 +116,19 @@ ruleset com.futurewip.library {
     }
   }
 
+  rule bookMinted {
+    select when com_futurewip_library book_minted
+    pre {
+      book_eci = event:attr("eci")
+
+    }
+    fired {
+      ent:bookEcis := ent:bookEcis.append(book_eci)
+      ent:eci_to_mint := null
+      raise com_futurewip_library event "nagivate_home"
+    }
+  }
+
   rule navigateToMinter {
     select when com_futurewip_library book_added
 
@@ -111,8 +138,9 @@ ruleset com.futurewip.library {
     send_directive("_redirect",{"url":minter_page})
   }
 
-  rule redirectBack {
-     select when com_futurewip_library book_deleted
+  rule redirectHome {
+     select when com_futurewip_library book_deleted or
+      com_futurewip_library nagivate_home
      pre {
        home_page = home_page()
      }
