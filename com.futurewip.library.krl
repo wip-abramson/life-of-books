@@ -45,7 +45,7 @@ ruleset com.futurewip.library {
       app:html_page("mint book", "",
       <<
       <h1>Mint Book</h1>
-      #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "book", {})}
+      #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
       >>, _headers
       )
     }

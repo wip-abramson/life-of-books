@@ -23,14 +23,11 @@ ruleset com.futurewip.book {
       <form method="POST" action='#{event_url("mint_book")}'>
       <button type="submit">Mint</button></div>
       </form>
-      >>
-
-      
+      >>   
     }
 
     mint_page = function() {
-      <<
-      <div>
+      <<<div>
       <h1>Mint Book</h2>
       <input name="isbn" autofocus/>
       <input name="title" autofocus/>
