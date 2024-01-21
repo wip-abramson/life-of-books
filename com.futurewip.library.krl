@@ -34,13 +34,14 @@ ruleset com.futurewip.library {
       #{ent:bookEcis.map(function(bookEci) {
       <<
       <li>#{bookEci}</li>
-      <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
       >>
       }).join("")
       }
       </ul>
       >>, _headers)
     }
+    // <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
+
 
     minter = function(_headers) {
       app:html_page("mint book", "",
@@ -122,7 +123,9 @@ ruleset com.futurewip.library {
     }
     // send_directive("_redirect",{"url":home_page})
     fired {
-      ent:bookEcis := ent:bookEcis.append(ent:eci_to_mint)
+      ent:bookEcis := ent:bookEcis.append("SOME ECI")
+
+      // ent:bookEcis := ent:bookEcis.append(ent:eci_to_mint)
       ent:eci_to_mint := null
       // raise com_futurewip_library event "navigate_home"
     }
