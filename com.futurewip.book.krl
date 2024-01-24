@@ -33,6 +33,8 @@ ruleset com.futurewip.book {
       <div>
       <label>Title</label>
       <input name="title" autofocus/>
+      <label>Author</label>
+      <input name="author" autofocus/>
       <button type="submit">Mint</button></div>
       </div>
       </form>
@@ -93,9 +95,8 @@ ruleset com.futurewip.book {
   rule mint_book {
     select when com_futurewip_book mint_book
     title re#(.+)#
-    setting(title)
-    // isbn re#(.+)#
-    // setting(isbn)
+    author re#(.*)#
+    setting(title, author)
     pre {
       parent_eci = wrangler:parent_eci()
     }
@@ -106,6 +107,7 @@ ruleset com.futurewip.book {
 
     fired {
       ent:title := title
+      ent:author := author
       raise com_futurewip_book event "library_home"
     }
 
