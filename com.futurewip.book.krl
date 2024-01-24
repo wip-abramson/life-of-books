@@ -64,7 +64,7 @@ ruleset com.futurewip.book {
     }
     
     event:send({"eci":parent_eci,
-    "domain":"com.futurewip.library","type":"cancel_mint"  })
+    "domain":"com_futurewip_library","type":"cancel_mint"  })
 
     fired {
       raise com_futurewip_book event "library_home"
