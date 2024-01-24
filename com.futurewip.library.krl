@@ -34,19 +34,28 @@ ruleset com.futurewip.library {
       #{ent:bookEcis.map(function(bookEci) {
       <<
       <li>#{bookEci}</li>
+      <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
       >>
       }).join("")
       }
       </ul>
       >>, _headers)
     }
-    // <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
 
 
     minter = function(_headers) {
+      ent:eci_to_mint != null => 
       app:html_page("mint book", "",
       <<
       #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
+      >>, _headers
+      )
+      |
+      app:html_page("mint book", "",
+      <<
+      <h1>No book to mint</h1>
+      
+      <button>Return to Library</button>
       >>, _headers
       )
     }
@@ -73,6 +82,24 @@ ruleset com.futurewip.library {
     }
   } 
 
+
+  rule reactToChildCreation {
+    select when wrangler:new_child_created
+    pre {
+      child_eci = event:attr("eci")
+    }
+    if child_eci then 
+      event:send({"eci":child_eci,
+        "domain":"wrangler","type":"install_ruleset_request",
+        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid,}
+      })
+
+    fired {
+      ent:eci_to_mint:= child_eci
+      raise ruleset event "repo_installed" // terminal event
+    }
+  }
+
   rule handleChildDeletion {
     select when wrangler:child_deleted
     pre {
@@ -98,22 +125,6 @@ ruleset com.futurewip.library {
     }
   }
 	
-  rule reactToChildCreation {
-    select when wrangler:new_child_created
-    pre {
-      child_eci = event:attr("eci")
-    }
-    if child_eci then 
-      event:send({"eci":child_eci,
-        "domain":"wrangler","type":"install_ruleset_request",
-        "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid,}
-      })
-
-    fired {
-      ent:eci_to_mint:= child_eci
-      raise ruleset event "repo_installed" // terminal event
-    }
-  }
 
   rule bookMinted {
     select when com_futurewip_library book_minted
