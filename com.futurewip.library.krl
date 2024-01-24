@@ -11,7 +11,7 @@ ruleset com.futurewip.library {
     book_repo_rid = "com.futurewip.book"
     repo_name = function(){
       netid = wrangler:name()
-      netid+"/library"
+      netid+"/book"
     }
     home_page = function() {
       app:query_url(meta:rid,"library.html")
@@ -142,7 +142,8 @@ ruleset com.futurewip.library {
     if book_eci then noop()
     fired {
 
-      ent:bookEcis := ent:bookEcis.append(ent:eci_to_mint)
+      ent:bookEcis := ent:bookEcis.append(book_eci)
+      // Tidy up pending list
       ent:eci_to_mint := null
       // raise com_futurewip_library event "navigate_home"
     }
