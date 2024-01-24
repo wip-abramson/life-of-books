@@ -54,6 +54,11 @@ ruleset com.futurewip.book {
       eci = wrangler:channels(["library","book"]).reverse().head().get("id")
       <<#{meta:host}/c/#{eci}/query/#{meta:rid}/#{query_name}>>
     }
+
+    child_eci = function() {
+      eci = wrangler:channels(["system", "child"]).head().get("id")
+      eci
+    }
   }
 
   rule cancel_mint {
@@ -99,10 +104,11 @@ ruleset com.futurewip.book {
     setting(title, author)
     pre {
       parent_eci = wrangler:parent_eci()
+      my_eci = child_eci()
     }
     if title then 
     event:send({"eci":parent_eci,
-    "domain":"com_futurewip_library","type":"book_minted"  })
+    "domain":"com_futurewip_library","type":"book_minted", "attrs": {"eci": my_eci} })
 
 
     fired {

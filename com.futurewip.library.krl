@@ -16,8 +16,8 @@ ruleset com.futurewip.library {
     home_page = function() {
       app:query_url(meta:rid,"library.html")
     }
-    minter_page = function() {
-      app:query_url(meta:rid, "minter.html")
+    minter_page = function(eci) {
+      app:query_url(meta:rid, "minter.html?eci="+eci)
     }
 
 
@@ -33,7 +33,6 @@ ruleset com.futurewip.library {
       <ul>
       #{ent:bookEcis.map(function(bookEci) {
       <<
-      <li>#{bookEci}</li>
       <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
       >>
       }).join("")
@@ -43,17 +42,19 @@ ruleset com.futurewip.library {
     }
 
 
-    minter = function(_headers) {
-      ent:eci_to_mint != null => 
+    // Test the eci is a valid PICO?
+    minter = function(eci, _headers) {
+
+      eci != null => 
       app:html_page("mint book", "",
       <<
-      #{wrangler:picoQuery(ent:eci_to_mint, book_repo_rid, "mint_page", {})}
+      #{wrangler:picoQuery(eci, book_repo_rid, "mint_page", {})}
       >>, _headers
       )
       |
       app:html_page("mint book", "",
       <<
-      <h1>No book to mint</h1>
+      <h1>Error, No book to mint</h1>
       
       <button>Return to Library</button>
       >>, _headers
@@ -73,9 +74,9 @@ ruleset com.futurewip.library {
   rule newBook {
     select when com_futurewip_library new_book
     pre {
-      minter_page = minter_page()
+      // minter_page = minter_page()
     }
-    send_directive("_redirect",{"url":minter_page})
+    // send_directive("_redirect",{"url":minter_page})
     fired {
       raise wrangler event "new_child_request" attributes
         event:attrs.put("name",repo_name())
@@ -87,15 +88,19 @@ ruleset com.futurewip.library {
     select when wrangler:new_child_created
     pre {
       child_eci = event:attr("eci")
+      html_page = minter_page(child_eci)
     }
-    if child_eci then 
+    if child_eci then every {
       event:send({"eci":child_eci,
         "domain":"wrangler","type":"install_ruleset_request",
         "attrs":{"absoluteURL": "https://raw.githubusercontent.com/wip-abramson/life-of-books/main/com.futurewip.book.krl","rid":book_repo_rid,}
       })
+      send_directive("_redirect",{"url":html_page})
+    }
 
     fired {
-      ent:eci_to_mint:= child_eci
+      // Add to list of pending ecis or something
+      // ent:eci_to_mint:= child_eci
       raise ruleset event "repo_installed" // terminal event
     }
   }
@@ -120,7 +125,8 @@ ruleset com.futurewip.library {
     
 
     fired {
-      ent:eci_to_mint := null
+      // TODO:handle garbage collection
+      // ent:eci_to_mint := null
       // raise com_futurewip_library event "navigate_home"
     }
   }
@@ -129,10 +135,11 @@ ruleset com.futurewip.library {
   rule bookMinted {
     select when com_futurewip_library book_minted
     pre {
+      book_eci = event:attr("eci")
       // book_eci = ent:eci_to_mint.klog("Minted ECI")
       home_page = home_page()
     }
-    // send_directive("_redirect",{"url":home_page})
+    if book_eci then noop()
     fired {
 
       ent:bookEcis := ent:bookEcis.append(ent:eci_to_mint)
