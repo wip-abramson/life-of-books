@@ -101,7 +101,7 @@ ruleset com.futurewip.book {
     }
     if title then 
     event:send({"eci":parent_eci,
-    "domain":"com.futurewip.library","type":"book_minted"  })
+    "domain":"com_futurewip_library","type":"book_minted"  })
 
 
     fired {
