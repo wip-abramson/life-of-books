@@ -123,9 +123,8 @@ ruleset com.futurewip.library {
     }
     // send_directive("_redirect",{"url":home_page})
     fired {
-      ent:bookEcis := ent:bookEcis.append("SOME ECI")
 
-      // ent:bookEcis := ent:bookEcis.append(ent:eci_to_mint)
+      ent:bookEcis := ent:bookEcis.append(ent:eci_to_mint)
       ent:eci_to_mint := null
       // raise com_futurewip_library event "navigate_home"
     }
