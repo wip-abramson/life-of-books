@@ -3,7 +3,7 @@ ruleset com.futurewip.library {
     name "Living Library"
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
-    shares library, home_page, minter, book_page
+    shares library, home_page, minter, book_page, book
   }
   global {
     event_domain = "com_futurewip_library"
