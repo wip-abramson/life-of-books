@@ -12,10 +12,10 @@ ruleset com.futurewip.book {
       <<<div>
       <h2>#{ent:title}</h2>
       <form method="POST" action='#{event_url("remove_book")}'>
-      <button type="submit">Remove</button>
+      <button type="submit is-danger">Remove</button>
       </form>
       <form method="POST" action='#{event_url("open_book")}'>
-      <button type="submit">Open</button>
+      <button class="button is-primary"  type="submit">Open</button>
       </form>
       </div>
       >>   

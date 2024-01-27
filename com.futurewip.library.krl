@@ -8,6 +8,7 @@ ruleset com.futurewip.library {
   global {
     event_domain = "com_futurewip_library"
     repo_rid = "com.futurewip.library"
+    stylesheet = "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css'>"
     book_repo_rid = "com.futurewip.book"
     repo_name = function(){
       netid = wrangler:name()
@@ -26,7 +27,7 @@ ruleset com.futurewip.library {
 
 
     library = function(_headers){
-      app:html_page("manage Books", "",
+      app:html_page("manage Books", stylesheet,
       <<
       <h1>Living Library</h1>
       <h2>Manage Books</h2>
@@ -34,14 +35,14 @@ ruleset com.futurewip.library {
       <button type="submit">Add Book</button>
       </form>
       <h2>Books</h2>
-      <ul>
+      
       #{ent:bookEcis.map(function(bookEci) {
       <<
-      <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "list_view", {})}</li>
+      <div class="card">#{wrangler:picoQuery(bookEci, book_repo_rid, "list_view", {})}</div>
       >>
       }).join("")
       }
-      </ul>
+      
       >>, _headers)
     }
 
