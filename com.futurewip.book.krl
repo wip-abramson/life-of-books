@@ -51,12 +51,11 @@ ruleset com.futurewip.book {
       </form>
 
       <form class="form" method="POST" action='#{event_url("mint_book")}'>
-      <div>
       <div class="field">
-      <label class="label">Title</label>
-      <div class="control">
-        <input name="title" class="input" type="text" placeholder="Book title...">
-      </div>
+        <label class="label">Title</label>
+        <div class="control">
+          <input name="title" class="input" type="text" placeholder="Book title...">
+        </div>
       </div>
 
       <div class="field">
@@ -65,17 +64,12 @@ ruleset com.futurewip.book {
           <input name="author" class="input" type="text">
         </div>
       </div>
-
-      <label>Author</label>
-      <input name="author"/>
-      <div class="field">
       <label class="label">Description</label>
       <div class="control">
         <textarea name="description" class="textarea" placeholder="Textarea"></textarea>
       </div>
-      </div>
+
       <button class="button is-link" type="submit">Mint</button></div>
-      </div>
       </form>
       <form method="POST" action='#{event_url("cancel_mint")}'>
       <button class="button is-link is-light" type="submit">Cancel</button></div>
