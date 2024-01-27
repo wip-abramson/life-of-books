@@ -26,8 +26,12 @@ ruleset com.futurewip.book {
     }
     book_view = function() {
       <<<div>
-      <h1>Book Detail Page</h1>
-      <h2>#{ent:title}</h2>
+      <h2 class="title">#{ent:title}</h2>
+      <h3 class="subtitle">#{ent:author}</h3>
+      <div class="content">
+      <p>#{ent:description}</p>
+      </div>
+
       <form method="POST" action='#{event_url("remove_book")}'>
       <button type="submit">Remove</button>
       </form>
