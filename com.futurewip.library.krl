@@ -29,19 +29,20 @@ ruleset com.futurewip.library {
     library = function(_headers){
       app:html_page("manage Books", stylesheet,
       <<
-      <h1>Living Library</h1>
-      <h2>Manage Books</h2>
+      <h1 class="title">Living Library</h1>
+      <h2 class="title is-3">Manage Books</h2>
       <form action='#{app:event_url(meta:rid,"new_book")}'>
-      <button type="submit">Add Book</button>
+      <button class="button is-primary" type="submit">Add Book</button>
       </form>
-      <h2>Books</h2>
-      
+      <div class="mt-3">
+      <h2 class="title">Books</h2>
       #{ent:bookEcis.map(function(bookEci) {
       <<
       #{wrangler:picoQuery(bookEci, book_repo_rid, "list_view", {})}
       >>
       }).join("")
       }
+      </div>
       
       >>, _headers)
     }
