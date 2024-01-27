@@ -48,7 +48,7 @@ ruleset com.futurewip.library {
 
     book = function(eci, _headers) {
       eci!=null && ent:bookEcis.index(eci) != -1 => 
-      app:html_page("book details", "",
+      app:html_page("book details", stylesheet,
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "book_view", {})}
       >>, _headers
@@ -69,7 +69,7 @@ ruleset com.futurewip.library {
     minter = function(eci, _headers) {
 
       eci != null && ent:minting_ecis.index(eci) != -1 => 
-      app:html_page("mint book", "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css'>",
+      app:html_page("mint book", stylesheet,
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "mint_page", {})}
       >>, _headers
