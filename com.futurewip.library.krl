@@ -45,7 +45,7 @@ ruleset com.futurewip.library {
     // Test the eci is a valid PICO?
     minter = function(eci, _headers) {
 
-      eci != null => 
+      eci != null && ent:minting_ecis.index(eci) != -1 => 
       app:html_page("mint book", "",
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "mint_page", {})}
@@ -55,8 +55,9 @@ ruleset com.futurewip.library {
       app:html_page("mint book", "",
       <<
       <h1>Error, No book to mint</h1>
-      
-      <button>Return to Library</button>
+      <form action='#{app:event_url(meta:rid,"navigate_home")}'>
+      <button type="submit">Return to Library</button>
+      </form>
       >>, _headers
       )
     }
@@ -73,10 +74,7 @@ ruleset com.futurewip.library {
   
   rule newBook {
     select when com_futurewip_library new_book
-    pre {
-      // minter_page = minter_page()
-    }
-    // send_directive("_redirect",{"url":minter_page})
+
     fired {
       raise wrangler event "new_child_request" attributes
         event:attrs.put("name",repo_name())
@@ -100,7 +98,7 @@ ruleset com.futurewip.library {
 
     fired {
       // Add to list of pending ecis or something
-      // ent:eci_to_mint:= child_eci
+      ent:minting_ecis:= ent:minting_ecis.append(child_eci)
       raise ruleset event "repo_installed" // terminal event
     }
   }
@@ -122,12 +120,14 @@ ruleset com.futurewip.library {
 
   rule handleMintCancelled {
     select when com_futurewip_library cancel_mint
-    
+    pre {
+      child_eci = event:attr("eci")
+      mint_eci_index = ent:minting_ecis.index(child_eci)
+    }
+    if child_eci then noop()
 
     fired {
-      // TODO:handle garbage collection
-      // ent:eci_to_mint := null
-      // raise com_futurewip_library event "navigate_home"
+      ent:minting_ecis := ent:minting_ecis.splice(mint_eci_index, 1)
     }
   }
 	
@@ -136,7 +136,7 @@ ruleset com.futurewip.library {
     select when com_futurewip_library book_minted
     pre {
       book_eci = event:attr("eci")
-      // book_eci = ent:eci_to_mint.klog("Minted ECI")
+      mint_eci_index = ent:minting_ecis.index(book_eci)
       home_page = home_page()
     }
     if book_eci then noop()
@@ -144,8 +144,8 @@ ruleset com.futurewip.library {
 
       ent:bookEcis := ent:bookEcis.append(book_eci)
       // Tidy up pending list
-      ent:eci_to_mint := null
-      // raise com_futurewip_library event "navigate_home"
+      ent:minting_ecis := ent:minting_ecis.splice(mint_eci_index, 1)
+
     }
   }
 

@@ -64,14 +64,13 @@ ruleset com.futurewip.book {
   rule cancel_mint {
     select when com_futurewip_book cancel_mint
 
-    // TODO: need to redirect to HOME
     pre {
-      
-      parent_eci = wrangler:parent_eci() // sic
+      my_eci = child_eci()
+      parent_eci = wrangler:parent_eci() 
     }
     
     event:send({"eci":parent_eci,
-    "domain":"com_futurewip_library","type":"cancel_mint"  })
+    "domain":"com_futurewip_library","type":"cancel_mint", "attrs": {"eci": my_eci}  })
 
     fired {
       raise com_futurewip_book event "library_home"
