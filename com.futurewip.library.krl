@@ -38,7 +38,7 @@ ruleset com.futurewip.library {
       
       #{ent:bookEcis.map(function(bookEci) {
       <<
-      <div class="card">#{wrangler:picoQuery(bookEci, book_repo_rid, "list_view", {})}</div>
+      #{wrangler:picoQuery(bookEci, book_repo_rid, "list_view", {})}
       >>
       }).join("")
       }

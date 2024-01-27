@@ -9,14 +9,18 @@ ruleset com.futurewip.book {
     channel_tags = ["library","book"]
     event_domain = "com_futurewip_book"
     list_view = function() {
-      <<<div>
-      <h2>#{ent:title}</h2>
+      <<<div class="card mt-2">
+      <header class="card-header">
+      <h2 class="card-header-title">#{ent:title}</h2>
+      </header>
+      <div class="is-pulled-right">
       <form method="POST" action='#{event_url("remove_book")}'>
       <button type="submit is-danger">Remove</button>
       </form>
       <form method="POST" action='#{event_url("open_book")}'>
       <button class="button is-primary"  type="submit">Open</button>
       </form>
+      </div>
       </div>
       >>   
     }
@@ -42,17 +46,35 @@ ruleset com.futurewip.book {
       <button type="submit">Generate</button>
       </form>
 
-      <form method="POST" action='#{event_url("mint_book")}'>
+      <form class="form" method="POST" action='#{event_url("mint_book")}'>
       <div>
-      <label>Title</label>
-      <input name="title" autofocus/>
+      <div class="field">
+      <label class="label">Title</label>
+      <div class="control">
+        <input name="title" class="input" type="text" placeholder="Book title...">
+      </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Author</label>
+        <div class="control">
+          <input name="author" class="input" type="text">
+        </div>
+      </div>
+
       <label>Author</label>
-      <input name="author" autofocus/>
-      <button type="submit">Mint</button></div>
+      <input name="author"/>
+      <div class="field">
+      <label class="label">Description</label>
+      <div class="control">
+        <textarea name="description" class="textarea" placeholder="Textarea"></textarea>
+      </div>
+      </div>
+      <button class="button is-link" type="submit">Mint</button></div>
       </div>
       </form>
       <form method="POST" action='#{event_url("cancel_mint")}'>
-      <button type="submit">Cancel</button></div>
+      <button class="button is-link is-light" type="submit">Cancel</button></div>
       </form>
       </div>
       >>
@@ -113,6 +135,7 @@ ruleset com.futurewip.book {
     select when com_futurewip_book mint_book
     title re#(.+)#
     author re#(.*)#
+    description re#(.*)#
     setting(title, author)
     pre {
       parent_eci = wrangler:parent_eci()
@@ -126,6 +149,7 @@ ruleset com.futurewip.book {
     fired {
       ent:title := title
       ent:author := author
+      ent:description := description
       raise com_futurewip_book event "library_home"
     }
 
