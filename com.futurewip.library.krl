@@ -3,7 +3,7 @@ ruleset com.futurewip.library {
     name "Living Library"
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.plan.apps alias app
-    shares library, home_page, minter
+    shares library, home_page, minter, book_page
   }
   global {
     event_domain = "com_futurewip_library"
@@ -20,6 +20,10 @@ ruleset com.futurewip.library {
       app:query_url(meta:rid, "minter.html?eci="+eci)
     }
 
+    book_page = function(book_eci) {
+      app:query_url(meta:rid, "book.html?eci="+book_eci)
+    }
+
 
     library = function(_headers){
       app:html_page("manage Books", "",
@@ -33,7 +37,7 @@ ruleset com.futurewip.library {
       <ul>
       #{ent:bookEcis.map(function(bookEci) {
       <<
-      <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "book", {})}</li>
+      <li>#{wrangler:picoQuery(bookEci, book_repo_rid, "list_view", {})}</li>
       >>
       }).join("")
       }
@@ -41,18 +45,36 @@ ruleset com.futurewip.library {
       >>, _headers)
     }
 
+    book = function(eci, _headers) {
+      eci!=null && ent:bookEcis.index(eci) != -1 => 
+      app:html_page("book details", "",
+      <<
+      #{wrangler:picoQuery(eci, book_repo_rid, "book_view", {})}
+      >>, _headers
+      )
+      |
+      app:html_page("error page", "",
+      <<
+      <h1>Error, No book found</h1>
+      <form action='#{app:event_url(meta:rid,"navigate_home")}'>
+      <button type="submit">Return to Library</button>
+      </form>
+      >>, _headers
+      )
+    }
+
 
     // Test the eci is a valid PICO?
     minter = function(eci, _headers) {
 
       eci != null && ent:minting_ecis.index(eci) != -1 => 
-      app:html_page("mint book", "",
+      app:html_page("mint book", "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css'>",
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "mint_page", {})}
       >>, _headers
       )
       |
-      app:html_page("mint book", "",
+      app:html_page("error page", "",
       <<
       <h1>Error, No book to mint</h1>
       <form action='#{app:event_url(meta:rid,"navigate_home")}'>

@@ -2,14 +2,27 @@ ruleset com.futurewip.book {
   meta {
     name "Books"
     use module io.picolabs.wrangler alias wrangler
-    shares book, mint_page
+    shares book_view, mint_page, list_view
   }
   global {
 
     channel_tags = ["library","book"]
     event_domain = "com_futurewip_book"
-    book = function() {
+    list_view = function() {
       <<<div>
+      <h2>#{ent:title}</h2>
+      <form method="POST" action='#{event_url("remove_book")}'>
+      <button type="submit">Remove</button>
+      </form>
+      <form method="POST" action='#{event_url("open_book")}'>
+      <button type="submit">Open</button>
+      </form>
+      </div>
+      >>   
+    }
+    book_view = function() {
+      <<<div>
+      <h1>Book Detail Page</h1>
       <h2>#{ent:title}</h2>
       <form method="POST" action='#{event_url("remove_book")}'>
       <button type="submit">Remove</button>
@@ -116,6 +129,15 @@ ruleset com.futurewip.book {
       raise com_futurewip_book event "library_home"
     }
 
+  }
+
+  rule open_book {
+    select when com_futurewip_book open_book
+    pre {
+      my_eci = child_eci()
+      detail_url = wrangler:picoQuery(wrangler:parent_eci(),"com.futurewip.library", "book_page", {"book_eci": my_eci})
+    }
+    send_directive("_redirect", {"url": detail_url})
   }
 
   rule library_home {
