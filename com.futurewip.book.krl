@@ -42,41 +42,42 @@ ruleset com.futurewip.book {
     mint_page = function() {
       <<<div>
       <h1>Mint Book</h2>
-      <form method="POST" action='#{event_url("generate_from_isbn")}'>
-      <div>
-      <label>ISBN</label>
-      <input type="text" autofocus/>
-      </div>
-      <button type="submit">Generate</button>
-      </form>
-
-      <form class="form" method="POST" action='#{event_url("mint_book")}'>
-      <div class="field">
-        <label class="label">Title</label>
-        <div class="control">
-          <input name="title" class="input" type="text" placeholder="Book title...">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Author</label>
-        <div class="control">
-          <input name="author" class="input" type="text">
-        </div>
-      </div>
-      <label class="label">Description</label>
-      <div class="control">
-        <textarea name="description" class="textarea" placeholder="Textarea"></textarea>
-      </div>
-
-      <button class="button is-link" type="submit">Mint</button></div>
-      </form>
-      <form method="POST" action='#{event_url("cancel_mint")}'>
-      <button class="button is-link is-light" type="submit">Cancel</button></div>
-      </form>
+      
       </div>
       >>
     }
+    // <form method="POST" action='#{event_url("generate_from_isbn")}'>
+    //   <div>
+    //   <label>ISBN</label>
+    //   <input type="text" autofocus/>
+    //   </div>
+    //   <button type="submit">Generate</button>
+    //   </form>
+
+    //   <form class="form" method="POST" action='#{event_url("mint_book")}'>
+    //   <div class="field">
+    //     <label class="label">Title</label>
+    //     <div class="control">
+    //       <input name="title" class="input" type="text" placeholder="Book title...">
+    //     </div>
+    //   </div>
+
+    //   <div class="field">
+    //     <label class="label">Author</label>
+    //     <div class="control">
+    //       <input name="author" class="input" type="text">
+    //     </div>
+    //   </div>
+    //   <label class="label">Description</label>
+    //   <div class="control">
+    //     <textarea name="description" class="textarea" placeholder="Textarea"></textarea>
+    //   </div>
+
+    //   <button class="button is-link" type="submit">Mint</button></div>
+    //   </form>
+    //   <form method="POST" action='#{event_url("cancel_mint")}'>
+    //   <button class="button is-link is-light" type="submit">Cancel</button></div>
+    //   </form>
 
     event_url = function(event_type,event_id){
       eci = wrangler:channels(channel_tags).reverse().head().get("id")

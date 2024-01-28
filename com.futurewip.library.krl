@@ -27,7 +27,7 @@ ruleset com.futurewip.library {
 
 
     library = function(_headers){
-      app:html_page("manage Books", "",
+      app:html_page("manage Books", stylesheet,
       <<
       <h1 class="title">Living Library</h1>
       <h2 class="title is-3">Manage Books</h2>
@@ -49,13 +49,13 @@ ruleset com.futurewip.library {
 
     book = function(eci, _headers) {
       eci!=null && ent:bookEcis.index(eci) != -1 => 
-      app:html_page("book details", "",
+      app:html_page("book details", stylesheet,
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "book_view", {})}
       >>, _headers
       )
       |
-      app:html_page("error page", "",
+      app:html_page("error page", stylesheet,
       <<
       <h1>Error, No book found</h1>
       <form action='#{app:event_url(meta:rid,"navigate_home")}'>
@@ -70,13 +70,13 @@ ruleset com.futurewip.library {
     minter = function(eci, _headers) {
 
       eci != null && ent:minting_ecis.index(eci) != -1 => 
-      app:html_page("mint book", "",
+      app:html_page("mint book", stylesheet,
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "mint_page", {})}
       >>, _headers
       )
       |
-      app:html_page("error page", "",
+      app:html_page("error page", stylesheet,
       <<
       <h1>Error, No book to mint</h1>
       <form action='#{app:event_url(meta:rid,"navigate_home")}'>
