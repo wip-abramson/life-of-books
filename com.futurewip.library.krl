@@ -27,7 +27,7 @@ ruleset com.futurewip.library {
 
 
     library = function(_headers){
-      app:html_page("manage Books", stylesheet,
+      app:html_page("manage Books", "",
       <<
       <h1 class="title">Living Library</h1>
       <h2 class="title is-3">Manage Books</h2>
@@ -49,7 +49,7 @@ ruleset com.futurewip.library {
 
     book = function(eci, _headers) {
       eci!=null && ent:bookEcis.index(eci) != -1 => 
-      app:html_page("book details", stylesheet,
+      app:html_page("book details", "",
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "book_view", {})}
       >>, _headers
@@ -70,7 +70,7 @@ ruleset com.futurewip.library {
     minter = function(eci, _headers) {
 
       eci != null && ent:minting_ecis.index(eci) != -1 => 
-      app:html_page("mint book", stylesheet,
+      app:html_page("mint book", "",
       <<
       #{wrangler:picoQuery(eci, book_repo_rid, "mint_page", {})}
       >>, _headers
