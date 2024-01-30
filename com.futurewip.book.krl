@@ -135,7 +135,7 @@ ruleset com.futurewip.book {
     title re#(.+)#
     author re#(.*)#
     description re#(.*)#
-    setting(title, author)
+    setting(title, author, description)
     pre {
       parent_eci = wrangler:parent_eci()
       my_eci = child_eci()
