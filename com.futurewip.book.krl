@@ -14,14 +14,14 @@ ruleset com.futurewip.book {
       <h2 class="card-header-title">#{ent:title}</h2>
       </header>
       <div class="card-content">
-      <div class="is-pulled-right">
-      <form method="POST" action='#{event_url("remove_book")}'>
-      <button type="submit" class="button is-danger">Remove</button>
-      </form>
-      <form method="POST" action='#{event_url("open_book")}'>
-      <button class="button is-primary"  type="submit">Open</button>
-      </form>
-      </div>
+        <div class="is-flex is-flex-direction-row is-pulled-right">
+          <form method="POST" action='#{event_url("remove_book")}'>
+          <button type="submit" class="button is-danger">Remove</button>
+          </form>
+          <form method="POST" action='#{event_url("open_book")}'>
+          <button class="button is-primary"  type="submit">Open</button>
+          </form>
+        </div>
       </div>
       </div>
       >>   
@@ -34,19 +34,20 @@ ruleset com.futurewip.book {
       <p>#{ent:description}</p>
       </div>
 
+      <div class="is-flex is-flex-direction-row">
       <form method="POST" action='#{event_url("library_home")}'>
       <button type="submit" class="button">Back</button>
       </form>
       <form method="POST" action='#{event_url("remove_book")}'>
       <button type="submit" class="button is-danger">Remove</button>
       </form>
-      
+      </div>
       </div>
       >>   
     }
 
     mint_page = function() {
-      <<<div>
+      <<<div class="container">
       <h1 class="title">Mint Book</h2>
       <form method="POST" action='#{event_url("generate_from_isbn")}'>
       <div>

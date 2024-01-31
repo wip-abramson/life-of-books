@@ -87,7 +87,7 @@ ruleset com.futurewip.library {
       <div class="container">
       <h1 class="title">#{error_msg}</h1>
       <form action='#{app:event_url(meta:rid,"navigate_home")}'>
-      <button type="submit">Return to Library</button>
+      <button type="submit" class="button">Return to Library</button>
       </form>
       </div>
       >>
