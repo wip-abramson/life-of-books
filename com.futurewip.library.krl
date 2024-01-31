@@ -29,6 +29,7 @@ ruleset com.futurewip.library {
     library = function(_headers){
       app:html_page("manage Books", stylesheet,
       <<
+      <div class="container">
       <h1 class="title">Living Library</h1>
       <h2 class="title is-3">Manage Books</h2>
       <form action='#{app:event_url(meta:rid,"new_book")}'>
@@ -42,6 +43,7 @@ ruleset com.futurewip.library {
       >>
       }).join("")
       }
+      </div>
       </div>
       
       >>, _headers)
@@ -57,10 +59,7 @@ ruleset com.futurewip.library {
       |
       app:html_page("error page", stylesheet,
       <<
-      <h1>Error, No book found</h1>
-      <form action='#{app:event_url(meta:rid,"navigate_home")}'>
-      <button type="submit">Return to Library</button>
-      </form>
+      #{error_component("Error, No book found")}
       >>, _headers
       )
     }
@@ -78,12 +77,7 @@ ruleset com.futurewip.library {
       |
       app:html_page("error page", stylesheet,
       <<
-      <div class="container">
-      <h1 class="title">Error, No book to mint</h1>
-      <form action='#{app:event_url(meta:rid,"navigate_home")}'>
-      <button type="submit">Return to Library</button>
-      </form>
-      </div>
+      #{error_component("Error, No book to mint")}
       >>, _headers
       )
     }
