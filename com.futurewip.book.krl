@@ -13,35 +13,41 @@ ruleset com.futurewip.book {
       <header class="card-header">
       <h2 class="card-header-title">#{ent:title}</h2>
       </header>
+      <div class="card-content">
       <div class="is-pulled-right">
       <form method="POST" action='#{event_url("remove_book")}'>
-      <button type="submit is-danger">Remove</button>
+      <button type="submit" class="button is-danger">Remove</button>
       </form>
       <form method="POST" action='#{event_url("open_book")}'>
       <button class="button is-primary"  type="submit">Open</button>
       </form>
       </div>
       </div>
+      </div>
       >>   
     }
     book_view = function() {
-      <<<div>
+      <<<div class="container">
       <h2 class="title">#{ent:title}</h2>
       <h3 class="subtitle">#{ent:author}</h3>
       <div class="content">
       <p>#{ent:description}</p>
       </div>
 
-      <form method="POST" action='#{event_url("remove_book")}'>
-      <button type="submit">Remove</button>
+      <form method="POST" action='#{event_url("library_home")}'>
+      <button type="submit" class="button">Back</button>
       </form>
+      <form method="POST" action='#{event_url("remove_book")}'>
+      <button type="submit" class="button is-danger">Remove</button>
+      </form>
+      
       </div>
       >>   
     }
 
     mint_page = function() {
       <<<div>
-      <h1>Mint Book</h2>
+      <h1 class="title">Mint Book</h2>
       <form method="POST" action='#{event_url("generate_from_isbn")}'>
       <div>
       <label>ISBN</label>

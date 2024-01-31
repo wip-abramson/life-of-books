@@ -78,15 +78,30 @@ ruleset com.futurewip.library {
       |
       app:html_page("error page", stylesheet,
       <<
-      <h1>Error, No book to mint</h1>
+      <div class="container">
+      <h1 class="title">Error, No book to mint</h1>
       <form action='#{app:event_url(meta:rid,"navigate_home")}'>
       <button type="submit">Return to Library</button>
       </form>
+      </div>
       >>, _headers
       )
     }
 
+    error_component = function(error_msg) {
+      <<
+      <div class="container">
+      <h1 class="title">#{error_msg}</h1>
+      <form action='#{app:event_url(meta:rid,"navigate_home")}'>
+      <button type="submit">Return to Library</button>
+      </form>
+      </div>
+      >>
+    }
+
   }
+
+
 
   rule initialize {
     select when com_futurewip_library factory_reset
